@@ -21,9 +21,9 @@
       </v-card-actions>
 
       <v-expand-transition>
-        <div v-show="show">
+        <div v-show="show" class="div-x">
           <v-divider></v-divider>
-          <v-card-text>{{ kijoStream }} </v-card-text>
+          <v-card-text class="card-text">{{ kijoStream }} </v-card-text>
         </div>
       </v-expand-transition>
     </v-card>
@@ -49,12 +49,14 @@ export default class EquipmentStatusComponent extends Vue {
         .create(
           `http://localhost:2308/getKijo/${this.equipmentOwner}/${this.equipmentId}`
         )
-        .on("message", (msg) => (this.kijoStream = msg))
+        .on("message", (msg) => (this.kijoStream += "\n" + msg.msg))
         .on("error", (err) =>
           console.error("Failed to parse or lost connection:", err)
         )
         .connect()
         .catch((err) => console.error("Failed make initial connection:", err));
+    } else {
+      this.kijoStream = "";
     }
   }
 }
@@ -67,5 +69,12 @@ export default class EquipmentStatusComponent extends Vue {
 .sub-title {
   font-family: "Roboto", sans-serif;
   color: rgb(210, 210, 207);
+}
+.card-text {
+  font-family: "Roboto", sans-serif;
+  flex-grow: 1;
+  overflow: auto;
+  scroll-behavior: auto;
+  height: 100px;
 }
 </style>
