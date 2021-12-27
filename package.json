@@ -15,6 +15,7 @@
     "vue-property-decorator": "^9.1.2",
     "vue-router": "^3.2.0",
     "vue-sse": "^2.5.0",
+    "vue-sticky-scroll": "^0.1.0",
     "vuetify": "^2.4.0"
   },
   "devDependencies": {

@@ -1,16 +1,22 @@
 <template>
   <div>
-    <v-card class="mx-auto" max-width="344" width="100%">
+    <v-card class="mx-auto" width="550" outlined>
+      <div class="text-overline mb-4">
+        {{ equipmentOwner }}/{{ equipmentId }}
+      </div>
       <v-card-title class="title-font">
-        {{ equipmentId }} - {{ equipmentStatus }}
+        {{ equipmentId }}
         <v-spacer> </v-spacer>
         <v-badge
           :color="equipmentStatus === 'ONLINE' ? '#00FF00' : '#808080'"
           inline
-        ></v-badge>
+        >
+        </v-badge>
       </v-card-title>
       <v-card-subtitle class="sub-title">
-        Since: {{ equipmentSince }}
+        Client: {{ equipmentOwner }}<br />
+        Since: {{ equipmentSince }}<br />
+        Status: {{ equipmentStatus }}
       </v-card-subtitle>
 
       <v-card-actions>
@@ -32,7 +38,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
-
+import VueStickyScroll from "vue-sticky-scroll";
 @Component
 export default class EquipmentStatusComponent extends Vue {
   @Prop(String) equipmentId!: string;
@@ -45,6 +51,7 @@ export default class EquipmentStatusComponent extends Vue {
   setShow(): void {
     this.show = !this.show;
     if (this.show === true) {
+      this.kijoStream = "";
       this.$sse
         .create(
           `http://localhost:2308/getKijo/${this.equipmentOwner}/${this.equipmentId}`
@@ -68,7 +75,8 @@ export default class EquipmentStatusComponent extends Vue {
 }
 .sub-title {
   font-family: "Roboto", sans-serif;
-  color: rgb(210, 210, 207);
+  font-size: 12px;
+  color: rgb(0, 17, 255);
 }
 .card-text {
   font-family: "Roboto", sans-serif;
@@ -76,5 +84,11 @@ export default class EquipmentStatusComponent extends Vue {
   overflow: auto;
   scroll-behavior: auto;
   height: 100px;
+}
+.text-overline {
+  font-family: "Roboto", sans-serif;
+  font-size: 12px;
+  padding-top: 10px;
+  padding-left: 10px;
 }
 </style>

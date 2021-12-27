@@ -25,7 +25,7 @@ import EquipmentStatus from "@/types/EquipmentStatus";
 })
 export default class App extends Vue {
   equipments = [];
-  pollData() {
+  pollData(): void {
     setInterval(async () => {
       const response = await fetch(
         "http://localhost:2308/getEquipmentStatus/BOMFUTURO_DEV"
@@ -34,7 +34,7 @@ export default class App extends Vue {
       this.equipments = data;
     }, 1000);
   }
-  created() {
+  created(): void {
     this.pollData();
   }
 }
