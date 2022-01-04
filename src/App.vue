@@ -14,25 +14,34 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import EquipmentStatusComponent from "@/components/EquipmentStatusComponent.vue";
 import EquipmentStatus from "@/types/EquipmentStatus";
+import "vue-loading-overlay/dist/vue-loading.css";
 
 @Component({
-  components: {
-    EquipmentStatusComponent,
-  },
+  components: { EquipmentStatusComponent },
 })
 export default class App extends Vue {
-  equipments = [];
+  equipment: EquipmentStatus = {
+    equipment: "",
+    owner: "",
+    status: "",
+    since: "",
+  };
+  equipments: EquipmentStatus[] = [];
+  search: any;
+  isLoading: boolean | undefined;
   pollData(): void {
+    this.isLoading = true;
     setInterval(async () => {
       const response = await fetch(
         "http://localhost:2308/getEquipmentStatus/BOMFUTURO_DEV"
       );
       const data = await response.json();
+      this.isLoading = false;
       this.equipments = data;
-    }, 1000);
+    }, 3000);
   }
   created(): void {
     this.pollData();

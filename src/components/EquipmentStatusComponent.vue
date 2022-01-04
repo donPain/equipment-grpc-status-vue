@@ -38,7 +38,8 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
-import VueStickyScroll from "vue-sticky-scroll";
+import { SSEClient } from "vue-sse";
+
 @Component
 export default class EquipmentStatusComponent extends Vue {
   @Prop(String) equipmentId!: string;
@@ -48,21 +49,32 @@ export default class EquipmentStatusComponent extends Vue {
 
   show = false as boolean;
   kijoStream = "" as string;
+  sseClient = null as unknown as SSEClient;
   setShow(): void {
     this.show = !this.show;
     if (this.show === true) {
       this.kijoStream = "";
-      this.$sse
-        .create(
-          `http://localhost:2308/getKijo/${this.equipmentOwner}/${this.equipmentId}`
+      this.sseClient = this.$sse.create({
+        url: `http://localhost:2308/getKijo/${this.equipmentOwner}/${this.equipmentId}`,
+        format: "json",
+        withCredentials: false,
+        polyfill: true,
+      });
+
+      this.sseClient
+        .on(
+          "message",
+          (msg: { msg: string }) => (this.kijoStream += "\n" + msg.msg)
         )
-        .on("message", (msg) => (this.kijoStream += "\n" + msg.msg))
-        .on("error", (err) =>
+        .on("error", (err: Error) =>
           console.error("Failed to parse or lost connection:", err)
         )
         .connect()
-        .catch((err) => console.error("Failed make initial connection:", err));
+        .catch((err: Error) =>
+          console.error("Failed make initial connection:", err)
+        );
     } else {
+      this.sseClient.disconnect();
       this.kijoStream = "";
     }
   }

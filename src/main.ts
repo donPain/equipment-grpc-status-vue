@@ -8,7 +8,6 @@ Vue.config.productionTip = false;
 Vue.use(VueSSE, {
   format: "json",
   polyfill: true,
-  url: "http://localhost:2308/getKijo/BOMFUTURO_DEV/315",
 });
 
 new Vue({

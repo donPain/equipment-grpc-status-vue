@@ -1,6 +1,6 @@
 export default interface EquipmentStatus {
-  Id: string;
-  Status: string;
+  equipment: string;
+  status: string;
   owner: string;
   since: string;
 }
